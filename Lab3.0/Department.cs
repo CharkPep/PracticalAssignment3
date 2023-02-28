@@ -19,12 +19,12 @@ namespace Lab3
         {
 
         }
-        public Department(string DepartmentName, int TeacherNumber, int StudentNumber, int DisciplineNumber, List<Student> Students, HashSet<Discipline> Disciplines)
+        public Department(string DepartmentName, int TeacherNumber, int StudentNumber, int DisciplineNumber, IEnumerable<Student> Students, HashSet<Discipline> Disciplines)
         {
             this.DepartmentName = DepartmentName;
             this.TeacherNumber = TeacherNumber;
             this.Disciplines = Disciplines;
-            this.Students= Students;
+            this.Students= Students.ToList();
             this.Disciplines = Disciplines;
         }
         public bool InvolveSpecialists(Company Company, int NumberToInvolve)

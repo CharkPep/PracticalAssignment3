@@ -16,16 +16,22 @@ namespace Lab3
         public List<Tuple<string, VacanciesTypes>> Vacancies { get; }
         public List<Employee> employees { get; }
         public Dictionary<Department, double> InvestAmount { get; }
-        public Company()
-        {
-        }
-        public Company(string CompanyName, int Income, List<Tuple<string, VacanciesTypes>> Vacancies, List<Employee> Employees, Dictionary<Department, double> InvestAmount)
+        public Company(string CompanyName, int Income, IEnumerable<Tuple<string, VacanciesTypes>>? Vacancies, IEnumerable<Employee> Employees, Dictionary<Department, double>? InvestAmount)
         {
             this.CompanyName = CompanyName;
             this.Income = Income;
-            this.Vacancies = Vacancies;
-            this.employees = Employees;
-            this.InvestAmount = InvestAmount;
+            if (Vacancies != null)
+            {
+                this.Vacancies = Vacancies.ToList();
+            }
+            if (Employees != null)
+            {
+                this.employees = Employees.ToList();
+            }
+            if (InvestAmount != null)
+            {
+                this.InvestAmount = InvestAmount;
+            }
 }
         public void ExpandNumberOfEmployees(Department department)
         {
@@ -51,7 +57,9 @@ namespace Lab3
             public int Spending { get; set; }
             public ITAccelerator(int projectNumber, IEnumerable<Student> students, int spendings)
             {
-                   
+                this.projectNumber = projectNumber;
+                this.students = students.ToList();
+                Spending = spendings;
             }
             public void GetVacantStudent(Department department, Company ITAcceleratorParent)
             {

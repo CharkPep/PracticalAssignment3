@@ -11,8 +11,8 @@ namespace Lab3
         public string StudentName { get; set; }
         public int YearOfStudy { get; set; }
         public int SuccessRate { get; set; } //[0 – 100] загальний бал
-        private Discipline discipline;
-        public int ITProjectsParticipationRate { get; }
+        public Discipline discipline { get; }
+        public int ITProjectsParticipationRate { get; set; } // Загальгий балл за проекти
         public int StudentsCreativity { get; set; }//0 - 100 - креативність студента
         public bool IsEmployed { get; set; }
         public Student(){}

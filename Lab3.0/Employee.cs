@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab3
 {
-    public class Employee : Company
+    public class Employee
     {
 
         public string name { get; set; }
@@ -27,6 +27,12 @@ namespace Lab3
             canBeInvolvedInStudy = CanTeach;
             this.disciplineToTeach = DisciplineToTeach;
         }
-
+        public Employee(Company EmployedAt, string Name, int Salory, bool CanTeach, Discipline DisciplineToTeach)
+        {
+            this.name = Name;
+            this.salory = Salory;
+            canBeInvolvedInStudy = CanTeach;
+            this.disciplineToTeach = DisciplineToTeach;
+        }
     }
 }
