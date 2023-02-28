@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab3
 {
-    public class Discipline : Department
+    public class Discipline
     {
         public string DisciplineName { get; }
         public string DisciplineDescription { get; }

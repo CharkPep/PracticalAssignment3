@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace Lab3
         public List<Tuple<string, VacanciesTypes>> Vacancies { get; }
         public List<Employee> employees { get; }
         public Dictionary<Department, double> InvestAmount { get; }
+        public Dictionary<Discipline, double>? DisciplineRateByCompany { get; }
+        public Company()
+        {
+
+        }
         public Company(string CompanyName, int Income, IEnumerable<Tuple<string, VacanciesTypes>>? Vacancies, IEnumerable<Employee> Employees, Dictionary<Department, double>? InvestAmount)
         {
             this.CompanyName = CompanyName;
@@ -32,7 +38,11 @@ namespace Lab3
             {
                 this.InvestAmount = InvestAmount;
             }
-}
+        }
+        public Company(string CompanyName, int Income, IEnumerable<Tuple<string, VacanciesTypes>>? Vacancies, IEnumerable<Employee> Employees, Dictionary<Department, double>? InvestAmount, Dictionary<Discipline, double>? DisciplineRateByCompany) : this(CompanyName, Income, Vacancies, Employees, InvestAmount)
+        {
+            this.DisciplineRateByCompany = DisciplineRateByCompany;
+        }
         public void ExpandNumberOfEmployees(Department department)
         {
             var InterShipVacancies = Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee).ToList();
@@ -50,6 +60,33 @@ namespace Lab3
                     }
                 }
             }
+        }
+        public void FileWrite()
+        {
+            var fout = new StreamWriter("Company.txt");
+            fout.WriteLine($"The name of the company: {CompanyName}");
+            fout.WriteLine($"The income of the company: {Income}");
+            fout.WriteLine($"The company has such vacancies: ");
+            foreach (var i in Vacancies)
+            {
+                fout.WriteLine($"{i.Item1} the level is {i.Item2}");
+            }
+            fout.WriteLine($"The company has such employees: ");
+            foreach (var i in employees)
+            {
+                fout.WriteLine($"{i.Name}");
+            }
+            fout.WriteLine($"The company invested in such departments:");
+            foreach (var i in InvestAmount)
+            {
+                fout.WriteLine($"{i.Key} : {i.Value}");
+            }
+            fout.WriteLine("The company rate Disciplines as such: ");
+            foreach(var i in DisciplineRateByCompany)
+            {
+                fout.WriteLine($"{i.Key} : {i.Value}");
+            }
+            fout.Close();
         }
         public class ITAccelerator{
             public int projectNumber { get; set; }

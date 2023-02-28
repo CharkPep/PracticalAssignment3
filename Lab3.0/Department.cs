@@ -12,9 +12,25 @@ namespace Lab3
     {
         public string? DepartmentName { get; }
         public int? TeacherNumber { get; set; }
-        public List<Student>? Students { get; set; }
+        public List<Student>? Students { get; }
         public HashSet<Discipline>? Disciplines { get; set; }
-
+        public void WriteFile()
+        {
+            var fout = new StreamWriter("Department.txt");
+            fout.WriteLine($"The Department name: {DepartmentName}");
+            fout.WriteLine($"The number of teachers in the department : {TeacherNumber}");
+            fout.WriteLine($"Students: ");
+            foreach(var i in Students)
+            {
+                fout.WriteLine(i.StudentName);
+            }
+            fout.WriteLine("The disciplines: ");
+            foreach (var i in Disciplines)
+            {
+                fout.WriteLine(i.DisciplineName);
+            }
+            fout.Close();
+        }
         public Department()
         {
 
