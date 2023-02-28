@@ -1,71 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
 namespace Lab3
-{ 
-    internal class Company
+{
+    public class Company
     {
+        public enum VacanciesTypes { InternShip, Trainee, Junior, Middle, Senior };
         public string CompanyName { get; }
         public int Income { get; }
-        public int EmloyeeNumber { get; }
-        public List<Discipline> VacancyByDiscipline { get; }
-        public List<Employee> employees { get; set; }
-        public int InterShipVacanvyes { get; set; }
-        public Dictionary<Department, int> InvestAmount { get; }
+        public List<Tuple<string, VacanciesTypes>> Vacancies { get; }
+        public List<Employee> employees { get; }
+        public Dictionary<Department, double> InvestAmount { get; }
+        public Company()
+        {
+        }
+        public Company(string CompanyName, int Income, List<Tuple<string, VacanciesTypes>> Vacancies, List<Employee> Employees, Dictionary<Department, double> InvestAmount)
+        {
+            this.CompanyName = CompanyName;
+            this.Income = Income;
+            this.Vacancies = Vacancies;
+            this.employees = Employees;
+            this.InvestAmount = InvestAmount;
+}
         public void ExpandNumberOfEmployees(Department department)
         {
-            int NumberOfGraduatingStudents = 0;
-            var ToEmploye = (int)(this.InterShipVacanvyes * 0.1);
-            var Employed = new List<Student>();
-            foreach (var i in department.Students)
+            var InterShipVacancies = Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee).ToList();
+            foreach (var item in InterShipVacancies)
             {
-                if (i.YearOfStudy == 4 && !i.IsEmployed && ToEmploye > 0) 
+                foreach (var student in department.Students.OrderBy(x => x.SuccessRate))
                 {
-                    NumberOfGraduatingStudents++;
-                    ToEmploye--;
-                    i.IsEmployed = true;
-                    Employed.Add(i);
+                    if (student.YearOfStudy == 4 && student.SuccessRate > 90 && !student.IsEmployed)
+                    {
+                        employees.Add(new Employee(student));
+                        student.IsEmployed = true;
+                        Debug.WriteLine($"Student " + student.StudentName + " found job.");
+                        Vacancies.Remove(item);
+                        break;
+                    }
                 }
-            }
-            foreach (var i in Employed)
-            {
-                Console.WriteLine($"Student " + i.StudentName + " found job.");
             }
         }
         public class ITAccelerator{
-            private int ProjectNumber;
-            private List<Student> Students;
-            private int StudentNumber;
-            public void GetInvestAmount()
+            public int projectNumber { get; set; }
+            public List<Student> students { get; }
+            public int Spending { get; set; }
+            public ITAccelerator(int projectNumber, IEnumerable<Student> students, int spendings)
             {
-
+                   
             }
             public void GetVacantStudent(Department department, Company ITAcceleratorParent)
             {
-                var Rating = new SortedSet<Tuple<Student, int>>(); 
-                foreach(var i in department.Students)
+                foreach (var item in ITAcceleratorParent.Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee))
                 {
-                    Rating.Add(Tuple.Create(i,i.SuccessRate + i.ITProjectsParticipationRate));
+                    foreach (var student in students.OrderBy(x => x.SuccessRate).ThenBy(x => x.ITProjectsParticipationRate))
+                    {
+                        if (student.YearOfStudy == 4 && student.SuccessRate > 90 && !student.IsEmployed)
+                        {
+                            ITAcceleratorParent.employees.Add(new Employee(student));
+                            student.IsEmployed = true;
+                            Debug.WriteLine($"Student " + student.StudentName + " found job.");
+                            ITAcceleratorParent.Vacancies.Remove(item);
+                            break;
+                        }
+                    }
                 }
-                int tempVacant = ITAcceleratorParent.InterShipVacanvyes;
-                Console.WriteLine($"There are {ITAcceleratorParent.InterShipVacanvyes} right now");
-                foreach(var i in Rating)
-                {
-                    if(tempVacant > 0)
-                        Console.WriteLine(i.Item1 + " " + i.Item2 + " Vacant.");
-                    else
-                        Console.WriteLine(i.Item1 + " " + i.Item2 + " Not Vacant.");
-                }
-
-            }
-            class ITAcceleratorTeacher
-            {
-                private string Name;
-                private int Salory;
             }
 
         }

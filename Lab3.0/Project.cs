@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lab3
 {
-    internal class Project : Company
+    public class Project : Company
     {
-        public string Type { get; }
-        public int DurationInMonth { get; set; }
+        public string type { get; }
+        public int durationInMonth { get; set; }
     
     }
 }
