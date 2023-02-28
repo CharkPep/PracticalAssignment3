@@ -61,7 +61,7 @@ namespace Lab3
                 }
             }
         }
-        public void FileWrite()
+        public void WriteFile()
         {
             var fout = new StreamWriter("Company.txt");
             fout.WriteLine($"The name of the company: {CompanyName}");
