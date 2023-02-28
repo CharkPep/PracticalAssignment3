@@ -145,7 +145,7 @@ namespace TestProject1
 
         }
 
-        private IEnumerable<(ITAccelerator, Department, Company, int)> DataSet4()
+        private IEnumerable<(ITAccelerator, Company, int)> DataSet4()
         {
             var Dis1 = new Discipline("╡ог", "", 100);
             var Dis2 = new Discipline("оог", "", 100);
@@ -174,10 +174,28 @@ namespace TestProject1
             Stud3.ITProjectsParticipationRate = 100; ;
             var ITAccel1 = new ITAccelerator(100, new List<Student>{ Stud1, Stud2, Stud3 }, 1000000);
 
-            var Dep1 = new Department("FIT", 100, 3, 6, new List<Student> { Stud1, Stud2, Stud3 }, new HashSet<Discipline> { Dis1, Dis2, Dis3 });
 
-            yield return (ITAccel1, Dep1, new Company("Company1", 0, Vacancies, new List<Employee> { Employee1, Employee2, Employee3 }, null), 2);
-        
+            yield return (ITAccel1, new Company("Company1", 0, Vacancies, new List<Employee> { Employee1, Employee2, Employee3 }, null), 2);
+            Stud1 = new Student("Egor", 4, 100, Dis1, 100);
+            Stud1.ITProjectsParticipationRate = 100;
+            Stud2 = new Student("Vlad", 4, 91, Dis1, 70);
+            Stud2.ITProjectsParticipationRate = 100;
+            Stud3 = new Student("Vova", 4, 100, Dis1, 90);
+            Stud3.ITProjectsParticipationRate = 100;
+            ITAccel1 = new ITAccelerator(100, new List<Student> { Stud1, Stud2, Stud3 }, 1000000);
+
+            yield return (ITAccel1, new Company("Company1", 0, Vacancies, new List<Employee> { Employee1, Employee2, Employee3 }, null), 3);
+            Stud1 = new Student("Egor", 4, 100, Dis1, 100);
+            Stud1.ITProjectsParticipationRate = 100;
+            Stud2 = new Student("Vlad", 4, 91, Dis1, 70);
+            Stud2.ITProjectsParticipationRate = 50;
+            Stud3 = new Student("Vova", 4, 100, Dis1, 90);
+            Stud3.ITProjectsParticipationRate = 100;
+            var Stud4 = new Student("Student4", 4, 91, Dis1, 90);
+            Stud4.ITProjectsParticipationRate = 100;
+            ITAccel1 = new ITAccelerator(100, new List<Student> { Stud1, Stud2, Stud3, Stud4 }, 1000000);
+
+            yield return (ITAccel1, new Company("Company1", 0, Vacancies, new List<Employee> { Employee1, Employee2, Employee3 }, null), 3);
 
 
         }
@@ -215,6 +233,17 @@ namespace TestProject1
                 Assert.IsTrue(expected == comp.employees.Count - curEmployee && expected == curVacancies - comp.Vacancies.Count, $"Expected: {expected}, got {comp.employees.Count - curEmployee} and {curVacancies - comp.Vacancies.Count}.");
             }
         }
-        
+        [TestMethod]
+        public void ITAcceleratorTest()
+        {
+            foreach(var (accelerator, comp, expected) in DataSet4())
+            {
+                int curEmployee = comp.employees.Count;
+                int curVacancies = comp.Vacancies.Count;
+                accelerator.GetVacantStudent(comp);
+                Assert.IsTrue(expected == comp.employees.Count - curEmployee && expected == curVacancies - comp.Vacancies.Count, $"Expected: {expected}, got {comp.employees.Count - curEmployee} and {curVacancies - comp.Vacancies.Count}.");
+
+            }
+        }
     }
 }

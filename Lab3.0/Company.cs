@@ -38,7 +38,7 @@ namespace Lab3
             var InterShipVacancies = Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee).ToList();
             foreach (var item in InterShipVacancies)
             {
-                foreach (var student in department.Students.OrderBy(x => x.SuccessRate))
+                foreach (var student in department.Students.OrderByDescending(x => x.SuccessRate))
                 {
                     if (student.YearOfStudy == 4 && student.SuccessRate > 90 && !student.IsEmployed)
                     {
@@ -61,11 +61,13 @@ namespace Lab3
                 this.students = students.ToList();
                 Spending = spendings;
             }
-            public void GetVacantStudent(Department department, Company ITAcceleratorParent)
+            public void GetVacantStudent(Company ITAcceleratorParent)
             {
-                foreach (var item in ITAcceleratorParent.Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee))
+                var InterShipVacancies = ITAcceleratorParent.Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee).ToList();
+                var StudentsOrdered = students.OrderByDescending(x => x.SuccessRate).ThenByDescending(x => x.ITProjectsParticipationRate);
+                foreach (var item in InterShipVacancies)
                 {
-                    foreach (var student in students.OrderBy(x => x.SuccessRate).ThenBy(x => x.ITProjectsParticipationRate))
+                    foreach (var student in StudentsOrdered)
                     {
                         if (student.YearOfStudy == 4 && student.SuccessRate > 90 && !student.IsEmployed)
                         {

@@ -10,10 +10,10 @@ namespace Lab3
 {
     public partial class Department
     {
-        public string DepartmentName { get; set; }
-        public int TeacherNumber { get; set; }
-        public List<Student> Students { get; set; }
-        public HashSet<Discipline> Disciplines { get; set; }
+        public string? DepartmentName { get; }
+        public int? TeacherNumber { get; set; }
+        public List<Student>? Students { get; set; }
+        public HashSet<Discipline>? Disciplines { get; set; }
 
         public Department()
         {
@@ -31,22 +31,34 @@ namespace Lab3
         {
             var NewTeachers = 0;
             var NewDisciplines = 0;
+        
+            if(Company.employees == null || this.Disciplines == null)
+            {
+                if (NewTeachers != NumberToInvolve)
+                {
+                    return false;
+                }
+                return true;
+            }
+            
             foreach (var i in Company.employees)
             {
-                if (i.canBeInvolvedInStudy && NumberToInvolve > NewTeachers)
+                if (i.CanBeInvolvedInStudy && NumberToInvolve > NewTeachers)
                 {
                     NewTeachers++;
-                    if (!Disciplines.Contains(i.disciplineToTeach))
+                    if (!Disciplines.Contains(i.DisciplineToTeach))
                     {
-                        Disciplines.Add(i.disciplineToTeach);
+                        Disciplines.Add(i.DisciplineToTeach);
                         NewDisciplines++;
                     }
-                    i.canBeInvolvedInStudy = false;
+                    i.CanBeInvolvedInStudy = false;
                 }
             }
+
             TeacherNumber += NewTeachers;
             Debug.WriteLine($"Number of new Teacher(s): {NewTeachers}");
             Debug.WriteLine($"Number of new Disciplines(s): {NewDisciplines}");
+
             if(NewTeachers != NumberToInvolve)
             {
                 return false;
