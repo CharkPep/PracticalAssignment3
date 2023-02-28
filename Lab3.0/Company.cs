@@ -12,16 +12,13 @@ namespace Lab3
     public class Company
     {
         public enum VacanciesTypes { InternShip, Trainee, Junior, Middle, Senior };
-        public string CompanyName { get; }
+        public string? CompanyName { get; }
         public int Income { get; }
-        public List<Tuple<string, VacanciesTypes>> Vacancies { get; }
-        public List<Employee> employees { get; }
-        public Dictionary<Department, double> InvestAmount { get; }
+        public List<Tuple<string, VacanciesTypes>>? Vacancies { get; }
+        public List<Employee>? employees { get; set; }
+        public Dictionary<Department, double>? InvestAmount { get; }
         public Dictionary<Discipline, double>? DisciplineRateByCompany { get; }
-        public Company()
-        {
-
-        }
+        public Company() { }
         public Company(string CompanyName, int Income, IEnumerable<Tuple<string, VacanciesTypes>>? Vacancies, IEnumerable<Employee> Employees, Dictionary<Department, double>? InvestAmount)
         {
             this.CompanyName = CompanyName;
@@ -45,6 +42,10 @@ namespace Lab3
         }
         public void ExpandNumberOfEmployees(Department department)
         {
+            if (Vacancies == null || department.Students == null)
+            {
+                throw new ArgumentNullException(nameof(department));
+            }
             var InterShipVacancies = Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee).ToList();
             foreach (var item in InterShipVacancies)
             {
@@ -52,6 +53,10 @@ namespace Lab3
                 {
                     if (student.YearOfStudy == 4 && student.SuccessRate > 90 && !student.IsEmployed)
                     {
+                        if (employees == null)
+                        {
+                            employees = new List<Employee>();
+                        }
                         employees.Add(new Employee(student));
                         student.IsEmployed = true;
                         Debug.WriteLine($"Student " + student.StudentName + " found job.");
@@ -66,25 +71,53 @@ namespace Lab3
             var fout = new StreamWriter("Company.txt");
             fout.WriteLine($"The name of the company: {CompanyName}");
             fout.WriteLine($"The income of the company: {Income}");
-            fout.WriteLine($"The company has such vacancies: ");
-            foreach (var i in Vacancies)
+            if(Vacancies == null)
             {
-                fout.WriteLine($"{i.Item1} the level is {i.Item2}");
+                fout.WriteLine("There is no Vacancies right now");
             }
-            fout.WriteLine($"The company has such employees: ");
-            foreach (var i in employees)
-            {
-                fout.WriteLine($"{i.Name}");
+            else 
+            { 
+                fout.WriteLine($"The company has such vacancies: ");
+                foreach (var i in Vacancies)
+                {
+                    fout.WriteLine($"{i.Item1} the level is {i.Item2}");
+                }
             }
-            fout.WriteLine($"The company invested in such departments:");
-            foreach (var i in InvestAmount)
+            if (employees == null)
             {
-                fout.WriteLine($"{i.Key} : {i.Value}");
+                fout.WriteLine("There is no employees in the company");
             }
-            fout.WriteLine("The company rate Disciplines as such: ");
-            foreach(var i in DisciplineRateByCompany)
+            else
             {
-                fout.WriteLine($"{i.Key} : {i.Value}");
+                fout.WriteLine($"The company has such employees: ");
+                foreach (var i in employees)
+                {
+                    fout.WriteLine($"{i.Name}");
+                }
+            }
+            if (InvestAmount == null)
+            {
+                fout.WriteLine("Company haven`t done any investment.");
+            }
+            else
+            {
+                fout.WriteLine($"The company invested in such departments:");
+                foreach (var i in InvestAmount)
+                {
+                    fout.WriteLine($"{i.Key} : {i.Value}");
+                }
+            }
+            if (DisciplineRateByCompany == null)
+            {
+                fout.WriteLine("The company haven`t rated any discipline.");
+            }
+            else
+            {
+                fout.WriteLine("The company rate Disciplines as such: ");
+                foreach (var i in DisciplineRateByCompany)
+                {
+                    fout.WriteLine($"{i.Key} : {i.Value}");
+                }
             }
             fout.Close();
         }
@@ -100,6 +133,10 @@ namespace Lab3
             }
             public void GetVacantStudent(Company ITAcceleratorParent)
             {
+                if (ITAcceleratorParent == null || ITAcceleratorParent.Vacancies == null)
+                {
+                    return;
+                }
                 var InterShipVacancies = ITAcceleratorParent.Vacancies.Where(x => x.Item2 == VacanciesTypes.InternShip || x.Item2 == VacanciesTypes.Trainee).ToList();
                 var StudentsOrdered = students.OrderByDescending(x => x.SuccessRate).ThenByDescending(x => x.ITProjectsParticipationRate);
                 foreach (var item in InterShipVacancies)
@@ -108,6 +145,10 @@ namespace Lab3
                     {
                         if (student.YearOfStudy == 4 && student.SuccessRate > 90 && !student.IsEmployed)
                         {
+                            if(ITAcceleratorParent.employees == null)
+                            {
+                                ITAcceleratorParent.employees = new List<Employee>();
+                            }
                             ITAcceleratorParent.employees.Add(new Employee(student));
                             student.IsEmployed = true;
                             Debug.WriteLine($"Student " + student.StudentName + " found job.");

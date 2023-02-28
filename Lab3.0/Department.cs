@@ -19,15 +19,29 @@ namespace Lab3
             var fout = new StreamWriter("Department.txt");
             fout.WriteLine($"The Department name: {DepartmentName}");
             fout.WriteLine($"The number of teachers in the department : {TeacherNumber}");
-            fout.WriteLine($"Students: ");
-            foreach(var i in Students)
+            if (Students == null)
             {
-                fout.WriteLine(i.StudentName);
+                fout.WriteLine("There is no students.");
             }
-            fout.WriteLine("The disciplines: ");
-            foreach (var i in Disciplines)
+            else
             {
-                fout.WriteLine(i.DisciplineName);
+                fout.WriteLine($"Students: ");
+                foreach (var i in Students)
+                {
+                    fout.WriteLine(i.StudentName);
+                }
+            }
+            if (Disciplines == null)
+            {
+                fout.WriteLine("There is no disciplines");
+            }
+            else
+            {
+                fout.WriteLine("The disciplines: ");
+                foreach (var i in Disciplines)
+                {
+                    fout.WriteLine(i.DisciplineName);
+                }
             }
             fout.Close();
         }
@@ -40,15 +54,18 @@ namespace Lab3
             this.DepartmentName = DepartmentName;
             this.TeacherNumber = TeacherNumber;
             this.Disciplines = Disciplines;
-            this.Students= Students.ToList();
+            this.Students = Students.ToList();
             this.Disciplines = Disciplines;
         }
         public bool InvolveSpecialists(Company Company, int NumberToInvolve)
         {
             var NewTeachers = 0;
             var NewDisciplines = 0;
-        
-            if(Company.employees == null || this.Disciplines == null)
+            if (Company == null || Company.employees == null)
+            {
+                throw new ArgumentNullException(nameof(Company));
+            }
+            if (Company.employees == null || this.Disciplines == null)
             {
                 if (NewTeachers != NumberToInvolve)
                 {
@@ -56,11 +73,15 @@ namespace Lab3
                 }
                 return true;
             }
-            
+
             foreach (var i in Company.employees)
             {
                 if (i.CanBeInvolvedInStudy && NumberToInvolve > NewTeachers)
                 {
+                    if (i.DisciplineToTeach == null)
+                    {
+                        throw new ArgumentNullException(nameof(Company));
+                    }
                     NewTeachers++;
                     if (!Disciplines.Contains(i.DisciplineToTeach))
                     {
@@ -75,31 +96,24 @@ namespace Lab3
             Debug.WriteLine($"Number of new Teacher(s): {NewTeachers}");
             Debug.WriteLine($"Number of new Disciplines(s): {NewDisciplines}");
 
-            if(NewTeachers != NumberToInvolve)
+            if (NewTeachers != NumberToInvolve)
             {
                 return false;
             }
             return true;
         }
-/*        public void InternShipForStudents(Company Company, Project project, Student student)
+        public void InternShipForStudents(string project, int projectdiffulty, Student student)
         {
-
-            if(Company.InterShipVacanvyes > 0)
-            {
-                Company.InterShipVacanvyes--;
-                student.StudentsCreativity += project.durationInMonth * 10;
-            }
-            if (student.StudentsCreativity > 100)
-            {
-                student.StudentsCreativity = 100;
-            }
-        }*/
+            Debug.WriteLine($"Student {student.StudentName} improved his/her creative abilites by {projectdiffulty}");
+            student.StudentsCreativity += projectdiffulty;
+        }
         public double InvestAmountByCompany(Company Company)
         {
+            if (Company == null || Company.InvestAmount == null)
+            {
+                throw new ArgumentNullException(nameof(Company));
+            }
             return Company.InvestAmount[this];
         }
-
-
-
     }
 }

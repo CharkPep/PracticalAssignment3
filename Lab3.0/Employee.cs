@@ -9,7 +9,7 @@ namespace Lab3
     public class Employee
     {
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int Salory { get; set; }
         public bool CanBeInvolvedInStudy { get; set; }
         public Discipline? DisciplineToTeach { get; set; }
