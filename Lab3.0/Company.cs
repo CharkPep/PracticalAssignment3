@@ -18,6 +18,7 @@ namespace Lab3
         public List<Employee>? employees { get; set; }
         public Dictionary<Department, double>? InvestAmount { get; }
         public Dictionary<Discipline, double>? DisciplineRateByCompany { get; }
+
         public Company() { }
         public Company(string CompanyName, int Income, IEnumerable<Tuple<string, VacanciesTypes>>? Vacancies, IEnumerable<Employee> Employees, Dictionary<Department, double>? InvestAmount)
         {
@@ -104,7 +105,7 @@ namespace Lab3
                 fout.WriteLine($"The company invested in such departments:");
                 foreach (var i in InvestAmount)
                 {
-                    fout.WriteLine($"{i.Key} : {i.Value}");
+                    fout.WriteLine($"{i.Key.DepartmentName} : {i.Value}");
                 }
             }
             if (DisciplineRateByCompany == null)
@@ -116,10 +117,18 @@ namespace Lab3
                 fout.WriteLine("The company rate Disciplines as such: ");
                 foreach (var i in DisciplineRateByCompany)
                 {
-                    fout.WriteLine($"{i.Key} : {i.Value}");
+                    fout.WriteLine($"{i.Key.DisciplineName} : {i.Value}");
                 }
             }
             fout.Close();
+            if (File.Exists("Company.txt"))
+            {
+                Console.WriteLine("File was written properly.");
+            }
+            else
+            {
+                Console.WriteLine("File was not written properly.");
+            }
         }
         public class ITAccelerator{
             public int projectNumber { get; set; }
@@ -130,6 +139,14 @@ namespace Lab3
                 this.projectNumber = projectNumber;
                 this.students = students.ToList();
                 Spending = spendings;
+            }
+            public void DoProjects(int NumberOfProjects)
+            {
+                projectNumber += NumberOfProjects;
+                foreach(var student in students)
+                {
+                    student.StudentsCreativity += NumberOfProjects*10;
+                }
             }
             public void GetVacantStudent(Company ITAcceleratorParent)
             {

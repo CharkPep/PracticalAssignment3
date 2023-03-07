@@ -44,12 +44,29 @@ namespace Lab3
                 }
             }
             fout.Close();
+            if (File.Exists("Department.txt"))
+            {
+                Console.WriteLine("File was written properly.");
+            }
+            else
+            {
+                Console.WriteLine("File was not written properly.");
+            }
+
         }
         public Department()
         {
 
         }
         public Department(string DepartmentName, int TeacherNumber, int StudentNumber, int DisciplineNumber, IEnumerable<Student> Students, HashSet<Discipline> Disciplines)
+        {
+            this.DepartmentName = DepartmentName;
+            this.TeacherNumber = TeacherNumber;
+            this.Disciplines = Disciplines;
+            this.Students = Students.ToList();
+            this.Disciplines = Disciplines;
+        }
+        public Department(string DepartmentName, int TeacherNumber, IEnumerable<Student> Students, HashSet<Discipline> Disciplines)
         {
             this.DepartmentName = DepartmentName;
             this.TeacherNumber = TeacherNumber;

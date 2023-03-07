@@ -202,7 +202,7 @@ namespace TestProject1
 
         #endregion
 
-
+        #region TestMethods
         [TestMethod]
         public void DepartmentInvolveSpecialistsTest()
         {
@@ -245,5 +245,6 @@ namespace TestProject1
 
             }
         }
+        #endregion
     }
 }
